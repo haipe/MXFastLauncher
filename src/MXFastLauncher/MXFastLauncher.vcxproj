@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{3400B42C-24EA-441D-AEB5-8CA05F76DB6E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>MXFastLauncher</RootNamespace>
+    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Temp\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Temp\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\zlib;..\..\3rd\png;..\..\3rd\CxImage;..\CommonUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>cd $(SolutionDir)..\Bin\$(Configuration)
+del DuiLib_d.dll /q
+copy $(SolutionDir)\Bin\DuiLib_d.dll  .\</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\zlib;..\..\3rd\png;..\..\3rd\CxImage;..\CommonUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>cd $(SolutionDir)..\Bin\$(Configuration)
+del DuiLib_d.dll /q
+copy $(SolutionDir)\Bin\DuiLib_d.dll  .\</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\3rd\CxImage\xfile.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximabmp.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximacfg.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximadef.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximage.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximagif.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaico.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaiter.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximajas.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximajbg.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximajpg.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximamng.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximapcx.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximapng.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximapsd.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaraw.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaska.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximatga.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximath.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximatif.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximawbmp.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximawmf.h" />
+    <ClInclude Include="..\..\3rd\CxImage\xiofile.h" />
+    <ClInclude Include="..\..\3rd\CxImage\xmemfile.h" />
+    <ClInclude Include="..\CommonUtil\CommonUtil.h" />
+    <ClInclude Include="..\CommonUtil\DualDisplayCtl.h" />
+    <ClInclude Include="..\CommonUtil\FMWnd.h" />
+    <ClInclude Include="FLMainToast.h" />
+    <ClInclude Include="MXFastLauncher.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\3rd\CxImage\tif_xfile.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximabmp.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximadsp.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaenc.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaexif.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximage.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximagif.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximahist.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaico.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximainfo.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaint.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximajas.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximajbg.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximajpg.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximalpha.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximalyr.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximamng.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapal.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapcx.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapng.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapsd.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaraw.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximasel.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaska.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximatga.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximath.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximatif.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximatran.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximawbmp.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximawmf.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximawnd.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\xmemfile.cpp" />
+    <ClCompile Include="..\CommonUtil\CommonUtil.cpp" />
+    <ClCompile Include="..\CommonUtil\DualDisplayCtl.cpp" />
+    <ClCompile Include="..\CommonUtil\FMWnd.cpp" />
+    <ClCompile Include="FLMainToast.cpp" />
+    <ClCompile Include="MXFastLauncher.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MXFastLauncher.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="MXFastLauncher.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

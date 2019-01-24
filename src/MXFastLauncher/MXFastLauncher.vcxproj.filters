@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="CommonUtil">
+      <UniqueIdentifier>{7941f566-3188-4b5d-a92b-3291da1f9d08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cximage">
+      <UniqueIdentifier>{a05aee10-f96f-4106-b5e3-d1edf2dc1484}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MXFastLauncher.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonUtil\DualDisplayCtl.h">
+      <Filter>CommonUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonUtil\FMWnd.h">
+      <Filter>CommonUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommonUtil\CommonUtil.h">
+      <Filter>CommonUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="FLMainToast.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\xfile.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximabmp.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximacfg.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximadef.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximage.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximagif.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximaico.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximaiter.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximajas.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximajbg.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximajpg.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximamng.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximapcx.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximapng.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximapsd.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximaraw.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximaska.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximatga.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximath.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximatif.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximawbmp.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\ximawmf.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\xiofile.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\3rd\CxImage\xmemfile.h">
+      <Filter>cximage</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MXFastLauncher.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonUtil\DualDisplayCtl.cpp">
+      <Filter>CommonUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonUtil\FMWnd.cpp">
+      <Filter>CommonUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommonUtil\CommonUtil.cpp">
+      <Filter>CommonUtil</Filter>
+    </ClCompile>
+    <ClCompile Include="FLMainToast.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\tif_xfile.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximabmp.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximadsp.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximaenc.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximaexif.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximage.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximagif.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximahist.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximaico.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximainfo.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximaint.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximajas.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximajbg.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximajpg.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximalpha.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximalyr.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximamng.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximapal.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximapcx.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximapng.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximapsd.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximaraw.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximasel.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximaska.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximatga.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximath.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximatif.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximatran.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximawbmp.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximawmf.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\ximawnd.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\3rd\CxImage\xmemfile.cpp">
+      <Filter>cximage</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MXFastLauncher.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="MXFastLauncher.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
