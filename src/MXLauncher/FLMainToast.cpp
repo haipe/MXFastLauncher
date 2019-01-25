@@ -2,6 +2,8 @@
 #include "FLMainToast.h"
 #include "ximage.h"
 #include "DualDisplayCtl.h"
+#include <atlconv.h>
+#include <DbgHelp.h>
 
 #define HIDE_WND_OPERATE_TIMER      100
 #define SHOW_WND_OPERATE_TIMER      101
@@ -9,6 +11,151 @@
 #define CHECK_CTRL_KEY_UP_TIMER  200
 
 #define TIMER_SP 50
+
+
+TString GetLocalAppdataPath()
+{
+    TCHAR szDefaultDir[MAX_PATH] = { 0 };
+    TCHAR szDocument[MAX_PATH] = { 0 };
+
+    LPITEMIDLIST pidl = NULL;
+    SHGetSpecialFolderLocation(NULL, CSIDL_LOCAL_APPDATA, &pidl);
+    if (pidl && SHGetPathFromIDList(pidl, szDocument))
+    {
+        GetShortPathName(szDocument, szDefaultDir, MAX_PATH);
+    }
+    return szDefaultDir;
+}
+
+#pragma comment(lib, "Dbghelp.lib")
+void CreateDir(const TCHAR* path)
+{
+    USES_CONVERSION;
+    MakeSureDirectoryPathExists(T2A(path));
+}
+
+BOOL GetShortCutFile(WCHAR* ShortcutFile, WCHAR* buf, int nSize)
+{
+    HRESULT           hres;
+    IShellLink        *psl;
+    IPersistFile      *ppf;
+    WIN32_FIND_DATA   fd;
+
+
+    hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&psl);
+    if (!SUCCEEDED(hres))
+        return   false;
+
+    hres = psl->QueryInterface(IID_IPersistFile, (void**)&ppf);
+    if (SUCCEEDED(hres))
+    {
+        //wchar_t wsz[MAX_PATH];   //buffer   for   Unicode   string
+        //MultiByteToWideChar(CP_ACP,0,ShortcutFile,-1,wsz,MAX_PATH);   
+        //hres = ppf->Load(wsz,STGM_READ);
+        hres = ppf->Load(ShortcutFile, STGM_READ);
+        if (SUCCEEDED(hres))
+            hres = psl->GetPath(buf, nSize, &fd, 0);
+        ppf->Release();
+    }
+    psl->Release();
+
+    return SUCCEEDED(hres);
+}
+
+HRESULT OpenExeLinkFile(TCHAR *linkPath )
+{
+    TCHAR szLinkPath[MAX_PATH] = { 0 };
+    lstrcpy(szLinkPath, linkPath);
+
+    TCHAR extName[MAX_PATH] = { 0 };
+    _wsplitpath(szLinkPath, NULL, NULL, NULL, extName);
+    if (lstrcmp(extName, L".lnk") == 0)
+    {
+        if (GetShortCutFile(szLinkPath, linkPath, MAX_PATH))
+        {
+        }
+    }
+
+    return S_OK;
+}
+
+
+HRESULT GetShellThumbnailImage(LPCWSTR pszPath, HBITMAP* pThumbnail)
+{
+    HRESULT hr = S_FALSE;
+
+    *pThumbnail = NULL;
+
+    LPITEMIDLIST pidlItems = NULL, pidlURL = NULL, pidlWorkDir = NULL;
+    WCHAR szBasePath[MAX_PATH], szFileName[MAX_PATH];
+    WCHAR* p;
+    wcscpy(szBasePath, pszPath);
+    p = wcsrchr(szBasePath, L'\\');
+    if (p) *(p + 1) = L'\0';
+    wcscpy(szFileName, pszPath + (p - szBasePath) + 1);
+
+    IShellFolder* psfDesktop = NULL;
+    IShellFolder* psfWorkDir = NULL;
+    IExtractImage* peiURL = NULL;
+    while (TRUE)
+    {
+        hr = SHGetDesktopFolder(&psfDesktop);
+        if (FAILED(hr)) break;
+
+        hr = psfDesktop->ParseDisplayName(NULL, NULL, szBasePath, NULL, &pidlWorkDir, NULL);
+        if (FAILED(hr)) break;
+        hr = psfDesktop->BindToObject(pidlWorkDir, NULL, IID_IShellFolder, (LPVOID*)&psfWorkDir);
+        if (FAILED(hr)) break;
+
+        hr = psfWorkDir->ParseDisplayName(NULL, NULL, szFileName, NULL, &pidlURL, NULL);
+        if (FAILED(hr)) break;
+
+        // query IExtractImage 
+        hr = psfWorkDir->GetUIObjectOf(NULL, 1, (LPCITEMIDLIST*)&pidlURL, IID_IExtractImage, NULL, (LPVOID*)&peiURL);
+        if (FAILED(hr)) break;
+
+        // define thumbnail properties 
+        SIZE size = { 64, 48 };
+        DWORD dwPriority = 0, dwFlags = IEIFLAG_ASPECT;
+        WCHAR pszImagePath[MAX_PATH];
+        hr = peiURL->GetLocation(pszImagePath, MAX_PATH, &dwPriority, &size, 16, &dwFlags);
+        if (FAILED(hr)) break;
+
+        // generate thumbnail 
+        hr = peiURL->Extract(pThumbnail);
+        if (FAILED(hr)) break;
+
+        break;
+    }
+
+    if (peiURL)peiURL->Release();
+    if (psfWorkDir)psfWorkDir->Release();
+    if (psfDesktop)psfDesktop->Release();
+
+    // free allocated structures
+    if (pidlWorkDir) CoTaskMemFree(pidlWorkDir);
+    if (pidlURL) CoTaskMemFree(pidlURL);
+    return hr;
+}
+
+const wchar_t* NewGUID()
+{
+    static wchar_t buf[64] = { 0 };
+    GUID guid;
+    if (S_OK == ::CoCreateGuid(&guid))
+    {
+        swprintf(buf, sizeof(buf)
+            , L"{%08X-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}"
+            , guid.Data1
+            , guid.Data2
+            , guid.Data3
+            , guid.Data4[0], guid.Data4[1]
+            , guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5]
+            , guid.Data4[6], guid.Data4[7]
+        );
+    }
+    return (const wchar_t*)buf;
+}
 
 FLMainToast::FLMainToast()
     : FMWnd(L"FLMainToast.xml")
@@ -30,6 +177,16 @@ HWND FLMainToast::Init(HWND owner)
     {
         return 0;
     }
+
+    m_dataDir = GetLocalAppdataPath();
+    m_dataDir += L"\\MXLauncher\\";
+
+    m_logDir = m_dataDir + L"log\\";
+    CreateDir(m_logDir.c_str());
+    m_cacheDir = m_dataDir + L"cache\\";
+    CreateDir(m_cacheDir.c_str());
+    m_imgDir = m_dataDir + L"img\\";
+    CreateDir(m_imgDir.c_str());
 
     ::DragAcceptFiles(m_hWnd, TRUE);
 
@@ -268,10 +425,38 @@ void FLMainToast::OnDropFiles(HDROP hDropInfo)
 
         //创建一个按钮，并监听双击事件
 
-        HICON ico = ::ExtractIcon(CPaintManagerUI::GetInstance(), cFileName, 0);
+        if (0)
+        {
+            //url文件，就是ini文件 
+            //[InternetShortcut]
+            //URL = http://hao.169x.cn/
+            //IconFile = C : \Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe
+        }
+
+        if (0)
+        {
+            //获取快捷键路径
+            OpenExeLinkFile(cFileName);
+        }
+        if (0)
+        {
+            //获取文件缩略图
+            HBITMAP bm;
+            GetShellThumbnailImage(cFileName, &bm);
+            if (bm)
+            {
+                CxImage img(CXIMAGE_FORMAT_BMP);
+                img.CreateFromHBITMAP(bm, 0, true);
+                if (img.IsValid())
+                    img.Save(L"D:\\lihp\\Desktop\\222.BMP", CXIMAGE_FORMAT_BMP);
+            }
+        }
         
         if (0)
         {
+            //获取exe的ico
+            HICON ico = ::ExtractIcon(CPaintManagerUI::GetInstance(), cFileName, 0);
+
             CxImage  image(CXIMAGE_FORMAT_ICO);
             image.CreateFromHICON(ico, true);
             if (image.IsValid())
