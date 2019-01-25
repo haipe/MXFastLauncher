@@ -23,7 +23,7 @@
     <ProjectGuid>{ECFEBF67-EA3E-4EE0-B864-03FB9699F7B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MXLauncher</RootNamespace>
-    <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
