@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<FontConfig>
+	<Font name="微软雅黑" id="0" size="12" default="true" shared="true"/><!--默认字体-->
+	<Font name="微软雅黑" id="1" size="22" shared="true"/><!--聊天-->
+	<Font name="微软雅黑" id="2" size="12" bold="true" shared="true"/><!--媒体共享时间-->
+	<Font name="微软雅黑" id="3" size="16" bold="true" shared="true"/><!--摄像头选择-->
+	<Font name="微软雅黑" id="4" size="14" shared="true"/><!--会议信息，摄像头选择，没有视频提示，聊天-->
+	<Font name="微软雅黑" id="5" size="14" bold="true" shared="true"/><!--关闭会议界面-->
+</FontConfig>
