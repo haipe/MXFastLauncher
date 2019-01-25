@@ -20,9 +20,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{3400B42C-24EA-441D-AEB5-8CA05F76DB6E}</ProjectGuid>
+    <ProjectGuid>{ECFEBF67-EA3E-4EE0-B864-03FB9699F7B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MXFastLauncher</RootNamespace>
+    <RootNamespace>MXLauncher</RootNamespace>
     <WindowsTargetPlatformVersion>7.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -93,7 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\CommonUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\CxImage;..\CommonUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,8 +101,9 @@
       <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>cd $(SolutionDir)..\Bin\$(Configuration)
+del DuiLib_d.dll /q
+copy $(SolutionDir)\Bin\DuiLib_d.dll  .\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -127,7 +128,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\CommonUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\CxImage;..\CommonUtil;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,8 +138,9 @@
       <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>cd $(SolutionDir)..\Bin\$(Configuration)
+del DuiLib.dll /q
+copy $(SolutionDir)\Bin\DuiLib.dll  .\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -159,13 +161,82 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="MXFastLauncher.h" />
+    <ClInclude Include="..\..\3rd\CxImage\xfile.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximabmp.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximacfg.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximadef.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximage.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximagif.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaico.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaiter.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximajas.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximajbg.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximajpg.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximamng.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximapcx.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximapng.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximapsd.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaraw.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximaska.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximatga.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximath.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximatif.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximawbmp.h" />
+    <ClInclude Include="..\..\3rd\CxImage\ximawmf.h" />
+    <ClInclude Include="..\..\3rd\CxImage\xiofile.h" />
+    <ClInclude Include="..\..\3rd\CxImage\xmemfile.h" />
+    <ClInclude Include="..\CommonUtil\CommonUtil.h" />
+    <ClInclude Include="..\CommonUtil\DualDisplayCtl.h" />
+    <ClInclude Include="..\CommonUtil\FMWnd.h" />
+    <ClInclude Include="FLMainToast.h" />
+    <ClInclude Include="FLMainToastMVP.h" />
+    <ClInclude Include="FLMainToastPresenter.h" />
+    <ClInclude Include="FLMainToastModel.h" />
+    <ClInclude Include="MXLauncher.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MXFastLauncher.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\tif_xfile.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximabmp.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximadsp.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaenc.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaexif.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximage.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximagif.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximahist.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaico.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximainfo.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaint.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximajas.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximajbg.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximajpg.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximalpha.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximalyr.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximamng.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapal.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapcx.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapng.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximapsd.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaraw.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximasel.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximaska.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximatga.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximath.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximatif.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximatran.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximawbmp.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximawmf.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\ximawnd.cpp" />
+    <ClCompile Include="..\..\3rd\CxImage\xmemfile.cpp" />
+    <ClCompile Include="..\CommonUtil\CommonUtil.cpp" />
+    <ClCompile Include="..\CommonUtil\DualDisplayCtl.cpp" />
+    <ClCompile Include="..\CommonUtil\FMWnd.cpp" />
+    <ClCompile Include="FLMainToast.cpp" />
+    <ClCompile Include="FLMainToastPresenter.cpp" />
+    <ClCompile Include="FLMainToastModel.cpp" />
+    <ClCompile Include="MXLauncher.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -174,10 +245,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MXFastLauncher.rc" />
+    <ResourceCompile Include="MXLauncher.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="MXFastLauncher.ico" />
+    <Image Include="MXLauncher.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

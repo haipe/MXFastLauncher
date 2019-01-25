@@ -247,9 +247,10 @@ namespace commonutil
 
     LRESULT FMWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        //if (m_xmlFile == _T("MeetingRoomDialog.xml"))
-        //if (m_xmlFile == _T("meetingtoolbar\\MeetingRoomToolBar.xml"))
-        //    printf("wnd:%d,[msg:%x, w:%d, l:%d]-----------------------.\n", m_hWnd, uMsg, wParam, lParam);
+        //if (m_xmlFile == _T("MainToast.xml"))
+        //CHAR ss[MAX_PATH]; 
+        //sprintf(ss, "wnd:%d,[msg:%x, w:%d, l:%d]-----------------------.\n", m_hWnd, uMsg, wParam, lParam);
+        //OutputDebugStringA(ss);
         
         LRESULT lRes = 0;
         BOOL bHandled = TRUE;
