@@ -1,27 +1,25 @@
 ﻿#pragma once
-#include "FMWnd.h"
+#include "MXDuiWnd.h"
 #include <list>
-#include <map>
+#include <vector>
 
 
 struct LauncherInfo
 {
-    int position;   //顺序
-    int page;       //页码
-    TString id;     //guid
-    TString name;   //名称
-    TString path;   //路径
-    TString param;  //参数
-    TString image;  //缩略图路径
+    mxtoolkit::TString id;     //guid
+    mxtoolkit::TString name;   //名称
+    mxtoolkit::TString path;   //路径
+    mxtoolkit::TString param;  //参数
+    mxtoolkit::TString image;  //缩略图路径
 };
 
-typedef std::list<LauncherInfo> LauncherInfoList;
-typedef std::map<int, LauncherInfoList> LauncherInfoListMap;
+typedef std::list<LauncherInfo>         LauncherInfoList;
+typedef std::vector<LauncherInfoList>   LauncherInfoListContainer;
 
 
 
 class FLMainToast 
-    : public commonutil::FMWnd
+    : public mxtoolkit::MXDuiWnd
     , public DuiLib::INotifyUI
 {
 public:
@@ -62,11 +60,11 @@ private:
     CDuiRect m_position;
 
 private:
-    TString m_dataDir;
-    TString m_logDir;
-    TString m_cacheDir;
-    TString m_imgDir;
+    mxtoolkit::TString m_dataDir;
+    mxtoolkit::TString m_logDir;
+    mxtoolkit::TString m_cacheDir;
+    mxtoolkit::TString m_imgDir;
 
-    LauncherInfoListMap m_dataMap;
+    LauncherInfoListContainer m_dataMap;
 };
 

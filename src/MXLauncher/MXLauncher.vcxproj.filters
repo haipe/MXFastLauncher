@@ -13,14 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="CommonUtil">
-      <UniqueIdentifier>{7941f566-3188-4b5d-a92b-3291da1f9d08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="cximage">
       <UniqueIdentifier>{a05aee10-f96f-4106-b5e3-d1edf2dc1484}</UniqueIdentifier>
     </Filter>
     <Filter Include="MainToast">
       <UniqueIdentifier>{e17ba911-3b4e-40f5-9956-86acb6de7549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_win32">
+      <UniqueIdentifier>{5ff1e658-b902-40e2-8c7e-753bc51923eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_common">
+      <UniqueIdentifier>{7941f566-3188-4b5d-a92b-3291da1f9d08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,15 +35,6 @@
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonUtil\DualDisplayCtl.h">
-      <Filter>CommonUtil</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonUtil\FMWnd.h">
-      <Filter>CommonUtil</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonUtil\CommonUtil.h">
-      <Filter>CommonUtil</Filter>
     </ClInclude>
     <ClInclude Include="..\..\3rd\CxImage\xfile.h">
       <Filter>cximage</Filter>
@@ -129,19 +123,25 @@
     <ClInclude Include="MXLauncher.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\win32\DualDisplayCtl.h">
+      <Filter>_win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\BaseMVP.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\ObjContainerUtil.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\win32\MXDuiWnd.h">
+      <Filter>_win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\MXCommon.h">
+      <Filter>_common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonUtil\DualDisplayCtl.cpp">
-      <Filter>CommonUtil</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonUtil\FMWnd.cpp">
-      <Filter>CommonUtil</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonUtil\CommonUtil.cpp">
-      <Filter>CommonUtil</Filter>
     </ClCompile>
     <ClCompile Include="..\..\3rd\CxImage\tif_xfile.cpp">
       <Filter>cximage</Filter>
@@ -250,6 +250,12 @@
     </ClCompile>
     <ClCompile Include="MXLauncher.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MXToolkit\win32\DualDisplayCtl.cpp">
+      <Filter>_win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MXToolkit\win32\MXDuiWnd.cpp">
+      <Filter>_win32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

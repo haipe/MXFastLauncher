@@ -4,6 +4,7 @@
 #include "DualDisplayCtl.h"
 #include <atlconv.h>
 #include <DbgHelp.h>
+#include "rapidjson\document.h"
 
 #define HIDE_WND_OPERATE_TIMER      100
 #define SHOW_WND_OPERATE_TIMER      101
@@ -13,7 +14,7 @@
 #define TIMER_SP 50
 
 
-TString GetLocalAppdataPath()
+mxtoolkit::TString GetLocalAppdataPath()
 {
     TCHAR szDefaultDir[MAX_PATH] = { 0 };
     TCHAR szDocument[MAX_PATH] = { 0 };
@@ -158,7 +159,7 @@ const wchar_t* NewGUID()
 }
 
 FLMainToast::FLMainToast()
-    : FMWnd(L"FLMainToast.xml")
+    : MXDuiWnd(L"FLMainToast.xml")
 {
 }
 
@@ -168,8 +169,8 @@ FLMainToast::~FLMainToast()
 
 HWND FLMainToast::Init(HWND owner)
 {
-    commonutil::FMWnd::SetNotify(this);
-    if (!FMWnd::Create(
+    mxtoolkit::MXDuiWnd::SetNotify(this);
+    if (!MXDuiWnd::Create(
         owner,
         _T("FLMainToast"),
         WS_OVERLAPPED | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_CLIPCHILDREN,
@@ -279,7 +280,7 @@ HRESULT FLMainToast::OnTimer(WPARAM wParam, LPARAM lParam, BOOL* bHandled)
     if (*bHandled)
         return 0;
 
-    return FMWnd::OnTimer(wParam, lParam, bHandled);
+    return MXDuiWnd::OnTimer(wParam, lParam, bHandled);
 }
 
 LRESULT FLMainToast::OnNcHitTest(WPARAM wParam, LPARAM lParam, BOOL* bHandled)
@@ -289,7 +290,7 @@ LRESULT FLMainToast::OnNcHitTest(WPARAM wParam, LPARAM lParam, BOOL* bHandled)
         int i = 0;
     }
 
-    return FMWnd::OnNcHitTest(wParam, lParam, bHandled);
+    return MXDuiWnd::OnNcHitTest(wParam, lParam, bHandled);
 }
 
 HRESULT FLMainToast::OnMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL* bHandled)
@@ -326,7 +327,7 @@ HRESULT FLMainToast::OnMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL* bH
     }break;
     }
 
-    return FMWnd::OnMessage(uMsg, wParam, lParam, bHandled);
+    return MXDuiWnd::OnMessage(uMsg, wParam, lParam, bHandled);
 }
 
 void FLMainToast::Notify(TNotifyUI& msg)
@@ -336,13 +337,26 @@ void FLMainToast::Notify(TNotifyUI& msg)
         m_maxAphle = 200;
         OperateShow(true);
 
-        FMWnd::InitWndAbilityManager();
+        MXDuiWnd::InitWndAbilityManager();
     }
     else if (msg.sType == DUI_MSGTYPE_CLICK)
     {
         if (msg.pSender == m_close)
             Close(0);
     }
+}
+
+void FLMainToast::LoadConfig()
+{
+    mxtoolkit::TString file = m_dataDir + L"\\launcher.json";
+
+    RAPIDJSON_NAMESPACE::Document doc;
+   // doc.Parse(file.c_str());
+}
+
+void FLMainToast::SaveConfig()
+{
+
 }
 
 void FLMainToast::OperateHide(bool start)
