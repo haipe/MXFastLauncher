@@ -126,16 +126,25 @@
     <ClInclude Include="..\..\..\MXToolkit\win32\DualDisplayCtl.h">
       <Filter>_win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\MXToolkit\common\BaseMVP.h">
-      <Filter>_common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\MXToolkit\common\ObjContainerUtil.h">
-      <Filter>_common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\MXToolkit\win32\MXDuiWnd.h">
       <Filter>_win32</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\MXToolkit\common\MXCommon.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\MXmvp.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\MXObjContainer.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\MXStringConvert.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\MXString.h">
+      <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MXToolkit\common\MXPath.h">
       <Filter>_common</Filter>
     </ClInclude>
   </ItemGroup>
@@ -256,6 +265,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\MXToolkit\win32\MXDuiWnd.cpp">
       <Filter>_win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MXToolkit\common\MXStringConvert.cpp">
+      <Filter>_common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MXToolkit\common\MXString.cpp">
+      <Filter>_common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MXToolkit\common\MXPath.cpp">
+      <Filter>_common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

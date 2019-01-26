@@ -1,10 +1,18 @@
 ﻿#include "stdafx.h"
 #include "FLMainToast.h"
+#include  <io.h>
+#include <fstream>
 #include "ximage.h"
 #include "DualDisplayCtl.h"
 #include <atlconv.h>
 #include <DbgHelp.h>
 #include "rapidjson\document.h"
+#include "rapidjson\writer.h"
+#include "rapidjson\filereadstream.h"
+#include "rapidjson\istreamwrapper.h"
+#include "MXStringConvert.h"
+#include "MXPath.h"
+#include "MXString.h"
 
 #define HIDE_WND_OPERATE_TIMER      100
 #define SHOW_WND_OPERATE_TIMER      101
@@ -35,27 +43,23 @@ void CreateDir(const TCHAR* path)
     MakeSureDirectoryPathExists(T2A(path));
 }
 
-BOOL GetShortCutFile(WCHAR* ShortcutFile, WCHAR* buf, int nSize)
+BOOL GetShortCutFile(const TCHAR* ShortcutFile, TCHAR* buf, int nSize)
 {
-    HRESULT           hres;
-    IShellLink        *psl;
-    IPersistFile      *ppf;
-    WIN32_FIND_DATA   fd;
+    IShellLink *psl = NULL;
+    IPersistFile *ppf = NULL;
+    WIN32_FIND_DATA fd;
 
-
-    hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&psl);
+    HRESULT hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&psl);
     if (!SUCCEEDED(hres))
-        return   false;
+        return false;
 
     hres = psl->QueryInterface(IID_IPersistFile, (void**)&ppf);
     if (SUCCEEDED(hres))
     {
-        //wchar_t wsz[MAX_PATH];   //buffer   for   Unicode   string
-        //MultiByteToWideChar(CP_ACP,0,ShortcutFile,-1,wsz,MAX_PATH);   
-        //hres = ppf->Load(wsz,STGM_READ);
         hres = ppf->Load(ShortcutFile, STGM_READ);
         if (SUCCEEDED(hres))
             hres = psl->GetPath(buf, nSize, &fd, 0);
+
         ppf->Release();
     }
     psl->Release();
@@ -63,71 +67,54 @@ BOOL GetShortCutFile(WCHAR* ShortcutFile, WCHAR* buf, int nSize)
     return SUCCEEDED(hres);
 }
 
-HRESULT OpenExeLinkFile(TCHAR *linkPath )
-{
-    TCHAR szLinkPath[MAX_PATH] = { 0 };
-    lstrcpy(szLinkPath, linkPath);
-
-    TCHAR extName[MAX_PATH] = { 0 };
-    _wsplitpath(szLinkPath, NULL, NULL, NULL, extName);
-    if (lstrcmp(extName, L".lnk") == 0)
-    {
-        if (GetShortCutFile(szLinkPath, linkPath, MAX_PATH))
-        {
-        }
-    }
-
-    return S_OK;
-}
-
-
-HRESULT GetShellThumbnailImage(LPCWSTR pszPath, HBITMAP* pThumbnail)
+HRESULT GetShellThumbnailImage(const WCHAR* pszPath, HBITMAP* pThumbnail)
 {
     HRESULT hr = S_FALSE;
 
     *pThumbnail = NULL;
 
     LPITEMIDLIST pidlItems = NULL, pidlURL = NULL, pidlWorkDir = NULL;
-    WCHAR szBasePath[MAX_PATH], szFileName[MAX_PATH];
-    WCHAR* p;
-    wcscpy(szBasePath, pszPath);
-    p = wcsrchr(szBasePath, L'\\');
-    if (p) *(p + 1) = L'\0';
-    wcscpy(szFileName, pszPath + (p - szBasePath) + 1);
+
+    mxtoolkit::WString dir, file;
+    mxtoolkit::Path::GetFilePathInfo(pszPath, &dir, &file);
 
     IShellFolder* psfDesktop = NULL;
     IShellFolder* psfWorkDir = NULL;
     IExtractImage* peiURL = NULL;
-    while (TRUE)
+    do
     {
         hr = SHGetDesktopFolder(&psfDesktop);
-        if (FAILED(hr)) break;
+        if (FAILED(hr))
+            break;
 
-        hr = psfDesktop->ParseDisplayName(NULL, NULL, szBasePath, NULL, &pidlWorkDir, NULL);
-        if (FAILED(hr)) break;
+        hr = psfDesktop->ParseDisplayName(NULL, NULL, (LPWSTR)dir.c_str(), NULL, &pidlWorkDir, NULL);
+        if (FAILED(hr))
+            break;
+
         hr = psfDesktop->BindToObject(pidlWorkDir, NULL, IID_IShellFolder, (LPVOID*)&psfWorkDir);
-        if (FAILED(hr)) break;
+        if (FAILED(hr))
+            break;
 
-        hr = psfWorkDir->ParseDisplayName(NULL, NULL, szFileName, NULL, &pidlURL, NULL);
-        if (FAILED(hr)) break;
+        hr = psfWorkDir->ParseDisplayName(NULL, NULL, (LPWSTR)file.c_str(), NULL, &pidlURL, NULL);
+        if (FAILED(hr))
+            break;
 
         // query IExtractImage 
         hr = psfWorkDir->GetUIObjectOf(NULL, 1, (LPCITEMIDLIST*)&pidlURL, IID_IExtractImage, NULL, (LPVOID*)&peiURL);
-        if (FAILED(hr)) break;
+        if (FAILED(hr))
+            break;
 
         // define thumbnail properties 
         SIZE size = { 64, 48 };
         DWORD dwPriority = 0, dwFlags = IEIFLAG_ASPECT;
         WCHAR pszImagePath[MAX_PATH];
         hr = peiURL->GetLocation(pszImagePath, MAX_PATH, &dwPriority, &size, 16, &dwFlags);
-        if (FAILED(hr)) break;
+        if (FAILED(hr))
+            break;
 
         // generate thumbnail 
         hr = peiURL->Extract(pThumbnail);
-        if (FAILED(hr)) break;
-
-        break;
-    }
+    } while (0);
 
     if (peiURL)peiURL->Release();
     if (psfWorkDir)psfWorkDir->Release();
@@ -136,26 +123,34 @@ HRESULT GetShellThumbnailImage(LPCWSTR pszPath, HBITMAP* pThumbnail)
     // free allocated structures
     if (pidlWorkDir) CoTaskMemFree(pidlWorkDir);
     if (pidlURL) CoTaskMemFree(pidlURL);
+
     return hr;
 }
 
-const wchar_t* NewGUID()
+
+HICON GetFileIcon(const TCHAR* file)
 {
-    static wchar_t buf[64] = { 0 };
-    GUID guid;
-    if (S_OK == ::CoCreateGuid(&guid))
+    HICON icon = NULL;
+
+    SHFILEINFO info;
+    if (SHGetFileInfo(file, FILE_ATTRIBUTE_NORMAL, &info, sizeof(info), SHGFI_SYSICONINDEX | SHGFI_ICON | SHGFI_USEFILEATTRIBUTES))
     {
-        swprintf(buf, sizeof(buf)
-            , L"{%08X-%04X-%04x-%02X%02X-%02X%02X%02X%02X%02X%02X}"
-            , guid.Data1
-            , guid.Data2
-            , guid.Data3
-            , guid.Data4[0], guid.Data4[1]
-            , guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5]
-            , guid.Data4[6], guid.Data4[7]
-        );
+        icon = info.hIcon;
     }
-    return (const wchar_t*)buf;
+
+    return icon;
+}
+
+HICON GetFolderIcon()
+{
+    HICON icon = NULL;
+    SHFILEINFO info;
+    if (SHGetFileInfo(_T("folder"), FILE_ATTRIBUTE_DIRECTORY, &info, sizeof(info), SHGFI_SYSICONINDEX | SHGFI_ICON | SHGFI_USEFILEATTRIBUTES))
+    {
+        icon = info.hIcon;
+    }
+
+    return icon;
 }
 
 FLMainToast::FLMainToast()
@@ -190,6 +185,8 @@ HWND FLMainToast::Init(HWND owner)
     CreateDir(m_imgDir.c_str());
 
     ::DragAcceptFiles(m_hWnd, TRUE);
+
+    LoadConfig();
 
     return m_hWnd;
 }
@@ -227,7 +224,7 @@ HRESULT FLMainToast::OnTimer(WPARAM wParam, LPARAM lParam, BOOL* bHandled)
         }
 
         int apl = m_pm.GetOpacity();
-        apl -= 16;
+        apl -= 32;
         if (apl <= 0)
         {
             ShowWindow(false);
@@ -283,26 +280,13 @@ HRESULT FLMainToast::OnTimer(WPARAM wParam, LPARAM lParam, BOOL* bHandled)
     return MXDuiWnd::OnTimer(wParam, lParam, bHandled);
 }
 
-LRESULT FLMainToast::OnNcHitTest(WPARAM wParam, LPARAM lParam, BOOL* bHandled)
-{
-    if (!GetAsyncKeyState(VK_LBUTTON))
-    {
-        int i = 0;
-    }
-
-    return MXDuiWnd::OnNcHitTest(wParam, lParam, bHandled);
-}
-
 HRESULT FLMainToast::OnMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL* bHandled)
 {
     switch (uMsg)
     {
-    case WM_QUERYDRAGICON:
-    {
-        //return (HCURSOR)m_hIcon;
-    }break;
     case WM_KILLFOCUS:
     {
+        OutputDebugStringA("-WM_KILLFOCUS.\n");
         if (GetAsyncKeyState(VK_CONTROL))
         {
             //检测Control 起来
@@ -310,7 +294,7 @@ HRESULT FLMainToast::OnMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL* bH
         }
         else
         {
-            OperateHide(true);
+            //OperateHide(true);
         }
     }break;
     case WM_MOUSEMOVE:
@@ -342,21 +326,140 @@ void FLMainToast::Notify(TNotifyUI& msg)
     else if (msg.sType == DUI_MSGTYPE_CLICK)
     {
         if (msg.pSender == m_close)
+        {
             Close(0);
+            SaveConfig();
+        }
     }
 }
 
 void FLMainToast::LoadConfig()
 {
     mxtoolkit::TString file = m_dataDir + L"\\launcher.json";
+    mxtoolkit::AString filePath;
+    mxtoolkit::SCKit::UnicodeToAnsi(file.c_str(), filePath);
 
+    std::ifstream ifs(filePath.c_str());
+    mxtoolkit::AString fileData;
+    mxtoolkit::AString line;
+    while (getline(ifs, line)) 
+    {
+        fileData.append(line + "\n");
+    }
     RAPIDJSON_NAMESPACE::Document doc;
-   // doc.Parse(file.c_str());
+    doc.Parse(fileData.c_str());
+    if (doc.HasParseError())
+        return;
+
+    if (!doc.IsArray())
+        return;
+
+    for (int pageIndex = 0; pageIndex < doc.Size(); pageIndex++)
+    {
+        const RAPIDJSON_NAMESPACE::Value &pageValue = doc[pageIndex];
+        if (!pageValue.IsObject())
+            continue;
+
+        LauncherPageInfo pageInfo;
+        mxtoolkit::SCKit::Utf8ToUnicode(pageValue["Name"].GetString(), pageInfo.name);
+
+        const RAPIDJSON_NAMESPACE::Value& objLauncers = pageValue["Items"];
+        if(!objLauncers.IsArray())
+            continue;
+
+        for (int launcherIndex = 0; launcherIndex < objLauncers.Size(); launcherIndex++)
+        {
+            const RAPIDJSON_NAMESPACE::Value &launcherValue = objLauncers[launcherIndex];
+            if (!launcherValue.IsObject())
+                continue;
+
+            LauncherInfo info;
+            if (launcherValue.HasMember("ID"))
+                mxtoolkit::SCKit::Utf8ToUnicode(launcherValue["ID"].GetString(), info.id);
+
+            if (launcherValue.HasMember("Name"))
+                mxtoolkit::SCKit::Utf8ToUnicode(launcherValue["Name"].GetString(), info.name);
+
+            if (launcherValue.HasMember("Icon"))
+                mxtoolkit::SCKit::Utf8ToUnicode(launcherValue["Icon"].GetString(), info.icon);
+
+            if (launcherValue.HasMember("Path"))
+                mxtoolkit::SCKit::Utf8ToUnicode(launcherValue["Path"].GetString(), info.path);
+
+            if (launcherValue.HasMember("Param"))
+                mxtoolkit::SCKit::Utf8ToUnicode(launcherValue["Param"].GetString(), info.param);
+
+            pageInfo.launchers.emplace_back(info);
+        }
+
+        m_launcherData.emplace_back(pageInfo);
+    }    
 }
 
 void FLMainToast::SaveConfig()
 {
+    RAPIDJSON_NAMESPACE::Document doc(RAPIDJSON_NAMESPACE::kArrayType);
+    RAPIDJSON_NAMESPACE::Document::AllocatorType &allocator = doc.GetAllocator(); //获取分配器
 
+    for (auto& pageInfo : m_launcherData)
+    {
+        RAPIDJSON_NAMESPACE::Value objPage(RAPIDJSON_NAMESPACE::kObjectType);//创建一个Object类型的元素
+        mxtoolkit::AString utf8;
+        mxtoolkit::SCKit::UnicodeToUtf8(pageInfo.name.c_str(), utf8);
+        objPage.AddMember("Name", RAPIDJSON_NAMESPACE::Value(utf8.c_str(), utf8.length(), allocator), allocator);
+
+        RAPIDJSON_NAMESPACE::Value objLaunchers(RAPIDJSON_NAMESPACE::kArrayType);
+        for (auto& launcher : pageInfo.launchers)
+        {
+            RAPIDJSON_NAMESPACE::Value objLauncher(RAPIDJSON_NAMESPACE::kObjectType);//创建一个Object类型的元素
+            mxtoolkit::AString utf8;
+            mxtoolkit::SCKit::UnicodeToUtf8(launcher.id.c_str(), utf8);
+            objLauncher.AddMember("ID", RAPIDJSON_NAMESPACE::Value(utf8.c_str(), utf8.length(), allocator), allocator);
+
+            mxtoolkit::SCKit::UnicodeToUtf8(launcher.name.c_str(), utf8);
+            objLauncher.AddMember("Name", RAPIDJSON_NAMESPACE::Value(utf8.c_str(), utf8.length(), allocator), allocator);
+
+            mxtoolkit::SCKit::UnicodeToUtf8(launcher.icon.c_str(), utf8);
+            objLauncher.AddMember("Icon", RAPIDJSON_NAMESPACE::Value(utf8.c_str(), utf8.length(), allocator), allocator);
+
+            mxtoolkit::SCKit::UnicodeToUtf8(launcher.path.c_str(), utf8);
+            objLauncher.AddMember("Path", RAPIDJSON_NAMESPACE::Value(utf8.c_str(), utf8.length(), allocator), allocator);
+
+            mxtoolkit::SCKit::UnicodeToUtf8(launcher.param.c_str(), utf8);
+            objLauncher.AddMember("Param", RAPIDJSON_NAMESPACE::Value(utf8.c_str(), utf8.length(), allocator), allocator);
+
+            objLaunchers.PushBack(objLauncher, allocator);
+        }
+
+        objPage.AddMember("Items", objLaunchers, allocator);
+        doc.PushBack(objPage, allocator);
+    }
+    
+    RAPIDJSON_NAMESPACE::StringBuffer buffer;
+    RAPIDJSON_NAMESPACE::Writer<RAPIDJSON_NAMESPACE::StringBuffer> writer(buffer);
+    doc.Accept(writer);
+    
+    auto sss = buffer.GetString();
+    std::ofstream outfile;
+    mxtoolkit::TString file = m_dataDir + L"\\launcher.json";
+    mxtoolkit::AString filePath;
+    mxtoolkit::SCKit::UnicodeToAnsi(file.c_str(), filePath);
+
+    //写到文件
+//     outfile.open(filePath.c_str());
+//     if (outfile.fail())
+//     {
+//         return;
+//     }
+//     outfile << sss;
+//     outfile.close();
+
+    FILE* cfgFile = fopen(filePath.c_str(), "wb");
+    if (cfgFile)
+    {
+        fputs(buffer.GetString(), cfgFile);
+        fclose(cfgFile);
+    }
 }
 
 void FLMainToast::OperateHide(bool start)
@@ -423,8 +526,14 @@ void FLMainToast::JustShow()
     OperateHide(false);
     m_pm.SetOpacity(m_maxAphle);
     ShowWindow(true);
-
-    //::SetFocus(m_hWnd);
+    
+    if (GetCapture() != m_hWnd)
+    {
+        ::SetForegroundWindow(m_hWnd);
+        //::SetActiveWindow(m_hWnd);
+        //::SetCapture(m_hWnd);
+        //::SetFocus(m_hWnd);
+    }
 }
 
 void FLMainToast::OnDropFiles(HDROP hDropInfo)
@@ -437,46 +546,133 @@ void FLMainToast::OnDropFiles(HDROP hDropInfo)
     {
         ::DragQueryFile(hDropInfo, u, cFileName, sizeof(cFileName));
 
-        //创建一个按钮，并监听双击事件
-
-        if (0)
+        LauncherInfo info;
+        if (AnlysisFile(cFileName, info))
         {
-            //url文件，就是ini文件 
-            //[InternetShortcut]
-            //URL = http://hao.169x.cn/
-            //IconFile = C : \Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe
-        }
-
-        if (0)
-        {
-            //获取快捷键路径
-            OpenExeLinkFile(cFileName);
-        }
-        if (0)
-        {
-            //获取文件缩略图
-            HBITMAP bm;
-            GetShellThumbnailImage(cFileName, &bm);
-            if (bm)
-            {
-                CxImage img(CXIMAGE_FORMAT_BMP);
-                img.CreateFromHBITMAP(bm, 0, true);
-                if (img.IsValid())
-                    img.Save(L"D:\\lihp\\Desktop\\222.BMP", CXIMAGE_FORMAT_BMP);
-            }
-        }
-        
-        if (0)
-        {
-            //获取exe的ico
-            HICON ico = ::ExtractIcon(CPaintManagerUI::GetInstance(), cFileName, 0);
-
-            CxImage  image(CXIMAGE_FORMAT_ICO);
-            image.CreateFromHICON(ico, true);
-            if (image.IsValid())
-                image.Save(L"D:\\lihp\\Desktop\\111.BMP", CXIMAGE_FORMAT_BMP);
+            NewLauncher(info);
         }
     }
-    ::DragFinish(hDropInfo);
 
+    ::DragFinish(hDropInfo);
+}
+
+bool FLMainToast::AnlysisFile(const TCHAR* path, LauncherInfo& info)
+{
+    //创建一个按钮，并监听双击事件
+    mxtoolkit::TString dir, name, ext;
+    if (!mxtoolkit::Path::GetFilePathInfo(path, &dir, &name, &ext))
+    {
+        if (!mxtoolkit::Path::GetFolderPathInfo(path, &dir, &name))
+            return false;
+
+        info.name = name;
+        info.path = path;
+        info.id = mxtoolkit::NewGuidString();
+        info.icon = m_imgDir + info.id + _T(".bmp");
+
+        //目录
+        HICON ico = GetFolderIcon();
+        CxImage ximg(CXIMAGE_FORMAT_ICO);
+        ximg.CreateFromHICON(ico, true);
+        if (ximg.IsValid())
+            ximg.Save(info.icon.c_str(), CXIMAGE_FORMAT_BMP);
+
+        ::DeleteObject(ico);
+        return true;
+    }
+
+    info.name = name;
+    info.path = path;
+
+    if (ext == _T("url"))
+    {
+        //url文件，就是ini文件 
+        //[InternetShortcut]
+        //URL = http://hao.169x.cn/
+        //IconFile = C : \Windows\SystemApps\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\MicrosoftEdge.exe
+
+        TCHAR tempValue[MAX_PATH] = { 0 };
+        ::GetPrivateProfileString(L"InternetShortcut", L"IconFile", L"", tempValue, MAX_PATH, path);
+        LauncherInfo infoTemp;
+        if (AnlysisFile(tempValue, infoTemp))
+        {
+            info.id = info.id;
+            info.path = path;
+            info.icon = info.icon;
+            //::GetPrivateProfileString(L"InternetShortcut", L"URL", L"", tempValue, MAX_PATH, path);
+        }
+    }
+    else if (ext == _T("lnk"))
+    {
+        //获取快捷键路径
+        TCHAR realPath[MAX_PATH] = { 0 };
+        if (GetShortCutFile(path, realPath, MAX_PATH))
+        {
+            LauncherInfo infoTemp;
+            if (AnlysisFile(realPath, infoTemp))
+            {
+                info.id = infoTemp.id;
+                info.path = realPath;
+                info.icon = infoTemp.icon;
+            }
+        }
+    }
+    else if (ext == _T("exe"))
+    {
+        info.id = mxtoolkit::NewGuidString();
+        info.icon = m_imgDir + info.id + _T(".bmp");
+        //获取exe的ico
+        HICON ico = ::ExtractIcon(CPaintManagerUI::GetInstance(), path, 0);
+
+        CxImage ximg(CXIMAGE_FORMAT_ICO);
+        ximg.CreateFromHICON(ico, true);
+        if (ximg.IsValid())
+            ximg.Save(info.icon.c_str(), CXIMAGE_FORMAT_BMP);
+
+        ::DeleteObject(ico);
+    }
+    else
+    {
+        info.id = mxtoolkit::NewGuidString();
+        info.icon = m_imgDir + info.id + _T(".bmp");
+        //获取文件缩略图
+        HBITMAP bm;
+        GetShellThumbnailImage(path, &bm);
+        if (bm)
+        {
+            CxImage ximg(CXIMAGE_FORMAT_BMP);
+            ximg.CreateFromHBITMAP(bm, 0, true);
+            if (ximg.IsValid())
+                ximg.Save(info.icon.c_str(), CXIMAGE_FORMAT_BMP);
+        }
+        else
+        {
+            //查找系统设置的默认图标
+            HICON ico = GetFileIcon(path);
+            CxImage ximg(CXIMAGE_FORMAT_ICO);
+            ximg.CreateFromHICON(ico, true);
+            if (ximg.IsValid())
+                ximg.Save(info.icon.c_str(), CXIMAGE_FORMAT_BMP);
+
+            ::DeleteObject(ico);
+        }
+    }
+
+    return !info.id.empty();
+}
+
+void FLMainToast::NewLauncher(LauncherInfo& info)
+{
+    if (m_launcherData.empty())
+    {
+        m_launcherData.push_back(LauncherPageInfo());
+    }
+
+    auto pageIter = m_launcherData.begin();
+    if (pageIter == m_launcherData.end())
+        return;
+
+    //生成UI
+
+    pageIter->launchers.push_back(info);
 }

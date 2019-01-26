@@ -8,13 +8,20 @@ struct LauncherInfo
 {
     mxtoolkit::TString id;     //guid
     mxtoolkit::TString name;   //名称
+    mxtoolkit::TString icon;   //缩略图路径
     mxtoolkit::TString path;   //路径
     mxtoolkit::TString param;  //参数
-    mxtoolkit::TString image;  //缩略图路径
 };
 
 typedef std::list<LauncherInfo>         LauncherInfoList;
-typedef std::vector<LauncherInfoList>   LauncherInfoListContainer;
+
+struct LauncherPageInfo 
+{
+    mxtoolkit::TString  name;
+    LauncherInfoList    launchers;
+};
+
+typedef std::vector<LauncherPageInfo>   LauncherPageInfoVector;
 
 
 
@@ -31,7 +38,6 @@ public:
 
 protected:
     virtual HRESULT OnTimer(WPARAM wParam, LPARAM lParam, BOOL* bHandled);
-    virtual LRESULT OnNcHitTest(WPARAM wParam, LPARAM lParam, BOOL* bHandled);
     virtual HRESULT OnMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL* bHandled);
 
     virtual void Notify(TNotifyUI& msg);
@@ -49,6 +55,8 @@ protected:
     void JustShow();
 
     void OnDropFiles(HDROP hDropInfo);
+    bool AnlysisFile(const TCHAR* path, LauncherInfo& info);
+    void NewLauncher(LauncherInfo& info);
 
 private:
     DWORD m_maxAphle = 255;
@@ -65,6 +73,6 @@ private:
     mxtoolkit::TString m_cacheDir;
     mxtoolkit::TString m_imgDir;
 
-    LauncherInfoListContainer m_dataMap;
+    LauncherPageInfoVector m_launcherData;
 };
 

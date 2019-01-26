@@ -93,12 +93,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\MXToolkit\Common;..\..\..\MXToolkit\win32;..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\CxImage;..\..\3rd\rapidjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\MXToolkit\Common;..\..\..\MXToolkit\win32;..\..\..\MXToolkit\mdk\include;..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\CxImage;..\..\3rd\rapidjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\..\..\MXToolkit\mdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd $(SolutionDir)..\Bin\$(Configuration)
@@ -128,14 +129,15 @@ copy $(SolutionDir)\Bin\DuiLib_d.dll  .\</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\MXToolkit\Common;..\..\..\MXToolkit\win32;..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\CxImage;..\..\3rd\rapidjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\MXToolkit\Common;..\..\..\MXToolkit\win32;..\..\..\MXToolkit\mdk\include;..\..\..\DuiLib_Ultimate\DuiLib;..\..\3rd\CxImage;..\..\3rd\rapidjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Lib;..\..\..\MXToolkit\mdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>cd $(SolutionDir)..\Bin\$(Configuration)
@@ -161,9 +163,12 @@ copy $(SolutionDir)\Bin\DuiLib.dll  .\</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\MXToolkit\common\BaseMVP.h" />
+    <ClInclude Include="..\..\..\MXToolkit\common\MXmvp.h" />
+    <ClInclude Include="..\..\..\MXToolkit\common\MXPath.h" />
     <ClInclude Include="..\..\..\MXToolkit\common\MXCommon.h" />
-    <ClInclude Include="..\..\..\MXToolkit\common\ObjContainerUtil.h" />
+    <ClInclude Include="..\..\..\MXToolkit\common\MXObjContainer.h" />
+    <ClInclude Include="..\..\..\MXToolkit\common\MXStringConvert.h" />
+    <ClInclude Include="..\..\..\MXToolkit\common\MXString.h" />
     <ClInclude Include="..\..\..\MXToolkit\win32\DualDisplayCtl.h" />
     <ClInclude Include="..\..\..\MXToolkit\win32\MXDuiWnd.h" />
     <ClInclude Include="..\..\3rd\CxImage\xfile.h" />
@@ -200,6 +205,9 @@ copy $(SolutionDir)\Bin\DuiLib.dll  .\</Command>
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\MXToolkit\common\MXPath.cpp" />
+    <ClCompile Include="..\..\..\MXToolkit\common\MXStringConvert.cpp" />
+    <ClCompile Include="..\..\..\MXToolkit\common\MXString.cpp" />
     <ClCompile Include="..\..\..\MXToolkit\win32\DualDisplayCtl.cpp" />
     <ClCompile Include="..\..\..\MXToolkit\win32\MXDuiWnd.cpp" />
     <ClCompile Include="..\..\3rd\CxImage\tif_xfile.cpp" />
