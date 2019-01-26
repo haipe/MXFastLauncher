@@ -190,6 +190,7 @@ HWND FLMainToast::Init(HWND owner)
     ::DragAcceptFiles(m_hWnd, TRUE);
 
     LoadConfig();
+    LoadRunConfig();
 
     return m_hWnd;
 }
@@ -323,6 +324,9 @@ void FLMainToast::Notify(TNotifyUI& msg)
     {
         m_uiLauncherArea = dynamic_cast<CTileLayoutUI*>(  m_pm.FindControl(L"Launcher_Area"));
 
+        if (!m_position.IsNull())
+            ::MoveWindow(m_hWnd, m_position.left, m_position.top, m_position.GetWidth(), m_position.GetHeight(), TRUE);
+
         m_maxAphle = 200;
         OperateShow(true);
 
@@ -340,8 +344,11 @@ void FLMainToast::Notify(TNotifyUI& msg)
     {
         if (msg.pSender == m_close)
         {
+            ::GetWindowRect(m_hWnd, &m_position);
+
             Close(0);
             SaveConfig();
+            SaveRunConfig();
         }
     }
 }
@@ -356,9 +363,8 @@ void FLMainToast::LoadConfig()
     mxtoolkit::AString fileData;
     mxtoolkit::AString line;
     while (getline(ifs, line)) 
-    {
         fileData.append(line + "\n");
-    }
+    
     RAPIDJSON_NAMESPACE::Document doc;
     doc.Parse(fileData.c_str());
     if (doc.HasParseError())
@@ -473,6 +479,69 @@ void FLMainToast::SaveConfig()
         fputs(buffer.GetString(), cfgFile);
         fclose(cfgFile);
     }
+}
+
+void FLMainToast::LoadRunConfig()
+{
+    mxtoolkit::TString file = m_dataDir + L"\\run.json";
+    mxtoolkit::AString filePath;
+    mxtoolkit::SCKit::UnicodeToAnsi(file.c_str(), filePath);
+
+    std::ifstream ifs(filePath.c_str());
+    mxtoolkit::AString fileData;
+    mxtoolkit::AString line;
+    while (getline(ifs, line))
+        fileData.append(line + "\n");
+
+    RAPIDJSON_NAMESPACE::Document doc;
+    doc.Parse(fileData.c_str());
+    if (doc.HasParseError())
+        return;
+
+    m_position.Empty();
+    const RAPIDJSON_NAMESPACE::Value &xValue = doc["PosX"];
+    if (xValue.IsInt())
+        m_position.left = xValue.GetInt();
+    const RAPIDJSON_NAMESPACE::Value &yValue = doc["PosY"];
+    if (yValue.IsInt())
+        m_position.top = yValue.GetInt();
+
+    const RAPIDJSON_NAMESPACE::Value &wValue = doc["WndWidth"];
+    if (wValue.IsInt())
+        m_position.right = m_position.left + wValue.GetInt();
+    const RAPIDJSON_NAMESPACE::Value &hValue = doc["WndHeight"];
+    if (hValue.IsInt())
+        m_position.bottom = m_position.top + hValue.GetInt();
+}
+
+void FLMainToast::SaveRunConfig()
+{
+    RAPIDJSON_NAMESPACE::Document doc(RAPIDJSON_NAMESPACE::kObjectType);
+    RAPIDJSON_NAMESPACE::Document::AllocatorType &allocator = doc.GetAllocator(); //获取分配器
+
+    doc.AddMember("PosX", m_position.left, allocator);
+    doc.AddMember("PosY", m_position.top, allocator);
+    doc.AddMember("WndWidth", m_position.GetWidth(), allocator);
+    doc.AddMember("WndHeight", m_position.GetHeight(), allocator);
+
+    RAPIDJSON_NAMESPACE::StringBuffer buffer;
+    RAPIDJSON_NAMESPACE::Writer<RAPIDJSON_NAMESPACE::StringBuffer> writer(buffer);
+    doc.Accept(writer);
+
+    auto sss = buffer.GetString();
+    std::ofstream outfile;
+    mxtoolkit::TString file = m_dataDir + L"\\run.json";
+    mxtoolkit::AString filePath;
+    mxtoolkit::SCKit::UnicodeToAnsi(file.c_str(), filePath);
+
+    //写到文件
+    outfile.open(filePath.c_str());
+    if (outfile.fail())
+    {
+        return;
+    }
+    outfile << sss;
+    outfile.close();
 }
 
 void FLMainToast::OperateHide(bool start)

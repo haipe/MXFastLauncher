@@ -11,7 +11,7 @@
 			<Button name="Dialog_Title_Area_Close" tooltip="关闭" width="30" height="30" stateimage="common\close.png" statecount="4"/>
 		</HorizontalLayout>
 		<HorizontalLayout name="Dialog_Body_Area">
-			<TileLayout name="Launcher_Area" childpadding="1" itemsize="100,100" >	
+			<TileLayout name="Launcher_Area" childpadding="1" itemsize="96,96" >	
 				<!--<Button text="关闭关闭关闭关闭关闭关闭" textcolor="#ffffffff" textpadding="5,70,5" endellipsis="true" hotbkcolor="#FFAEAEAE" bkimage="file='D:\lihp\Desktop\111.bmp' dest='20,5,80,65'"/>-->
 			</TileLayout>
 		</HorizontalLayout>

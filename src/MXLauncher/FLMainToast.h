@@ -46,6 +46,8 @@ protected:
     void LoadConfig();
     void SaveConfig();
 
+    void LoadRunConfig();
+    void SaveRunConfig();
 
 protected:
     void OperateHide(bool start);
