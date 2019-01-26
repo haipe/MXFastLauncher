@@ -13,6 +13,9 @@
 #include "MXStringConvert.h"
 #include "MXPath.h"
 #include "MXString.h"
+#include <thread>
+
+
 
 #define HIDE_WND_OPERATE_TIMER      100
 #define SHOW_WND_OPERATE_TIMER      101
@@ -294,7 +297,7 @@ HRESULT FLMainToast::OnMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL* bH
         }
         else
         {
-            //OperateHide(true);
+            OperateHide(true);
         }
     }break;
     case WM_MOUSEMOVE:
@@ -318,10 +321,20 @@ void FLMainToast::Notify(TNotifyUI& msg)
 {
     if (msg.sType == DUI_MSGTYPE_WINDOWINIT)
     {
+        m_uiLauncherArea = dynamic_cast<CTileLayoutUI*>(  m_pm.FindControl(L"Launcher_Area"));
+
         m_maxAphle = 200;
         OperateShow(true);
 
         MXDuiWnd::InitWndAbilityManager();
+
+        for (auto& page : m_launcherData)
+        {
+            for (auto& launcher : page.launchers)
+            {
+                NewLauncher(launcher);
+            }
+        }
     }
     else if (msg.sType == DUI_MSGTYPE_CLICK)
     {
@@ -549,7 +562,16 @@ void FLMainToast::OnDropFiles(HDROP hDropInfo)
         LauncherInfo info;
         if (AnlysisFile(cFileName, info))
         {
-            NewLauncher(info);
+            if(NewLauncher(info))
+            {
+                if (m_launcherData.empty())
+                {
+                    m_launcherData.push_back(LauncherPageInfo());
+                }
+
+                auto pageIter = m_launcherData.begin();
+                pageIter->launchers.push_back(info);
+            }
         }
     }
 
@@ -661,18 +683,62 @@ bool FLMainToast::AnlysisFile(const TCHAR* path, LauncherInfo& info)
     return !info.id.empty();
 }
 
-void FLMainToast::NewLauncher(LauncherInfo& info)
+bool FLMainToast::NewLauncher(const LauncherInfo& info)
 {
-    if (m_launcherData.empty())
+    //生成UI
+    DuiLib::CButtonUI* btn = new DuiLib::CButtonUI;
+    if (!btn)
+        return false;
+
+    CDuiString bkImg;
+    bkImg.Format(L"file='%s' dest='20,5,80,65'", info.icon.c_str());
+    btn->SetBkImage(bkImg);
+    btn->SetText(info.name.c_str());
+    btn->SetName(info.id.c_str());
+    btn->SetTextColor(0xffffff);
+    btn->SetTextPadding({ 5,70,5,0 });
+
+    btn->SetAttribute(L"endellipsis", L"true");
+    btn->SetAttribute(L"hotbkcolor", L"#FFAEAEAE");
+
+    btn->OnEvent += MakeDelegate(this, &FLMainToast::OnLauncherEvent);
+    m_uiLauncherArea->Add(btn);
+    
+    return true;
+}
+
+bool FLMainToast::OnLauncherEvent(void* param)
+{
+    if (!param)return true;
+    TEventUI* event = (TEventUI*)param;
+
+    if (event->Type == UIEVENT_DBLCLICK)
     {
-        m_launcherData.push_back(LauncherPageInfo());
+        if (_tcscmp(event->pSender->GetClass(), L"ButtonUI") != 0)
+            return true;
+
+        auto name = event->pSender->GetName();
+
+        DoLauncher(name);
     }
 
-    auto pageIter = m_launcherData.begin();
-    if (pageIter == m_launcherData.end())
-        return;
+    return true;
+}
 
-    //生成UI
-
-    pageIter->launchers.push_back(info);
+void FLMainToast::DoLauncher(const TCHAR* name)
+{
+    for (auto& page : m_launcherData)
+    {
+        for (auto& launcher : page.launchers)
+        {
+            if (launcher.id.compare(name) == 0)
+            {
+                std::thread doLauncher([launcher]()
+                {
+                    ::ShellExecute(NULL, _T("open"), launcher.path.c_str(), launcher.param.c_str(), NULL, SW_SHOWNORMAL);
+                });
+                doLauncher.detach();
+            }
+        }
+    }
 }

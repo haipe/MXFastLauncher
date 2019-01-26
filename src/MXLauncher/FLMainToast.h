@@ -56,7 +56,13 @@ protected:
 
     void OnDropFiles(HDROP hDropInfo);
     bool AnlysisFile(const TCHAR* path, LauncherInfo& info);
-    void NewLauncher(LauncherInfo& info);
+    bool NewLauncher(const LauncherInfo& info);
+
+    bool OnLauncherEvent(void* param);
+    void DoLauncher(const TCHAR* name);
+
+private:
+    CTileLayoutUI * m_uiLauncherArea = nullptr;
 
 private:
     DWORD m_maxAphle = 255;
