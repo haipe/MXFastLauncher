@@ -290,6 +290,32 @@ HRESULT FLMainToast::OnMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL* bH
     {
     case WM_KILLFOCUS:
     {
+        HWND wnd = (HWND)wParam;
+        if(wnd == m_hWnd)
+            break;
+
+        if (wnd && wnd != m_hWnd)
+        {
+            bool bre = false;
+            while (true)
+            {
+                HWND parent = GetParent(wnd);
+                if (!parent)
+                    break;
+
+                if (parent == m_hWnd)
+                {
+                    bre = true;
+                    break;
+                }
+
+                wnd = parent;
+            }
+
+            if(bre)
+                break;
+        }
+
         OutputDebugStringA("-WM_KILLFOCUS.\n");
         if (GetAsyncKeyState(VK_CONTROL))
         {
@@ -322,7 +348,8 @@ void FLMainToast::Notify(TNotifyUI& msg)
 {
     if (msg.sType == DUI_MSGTYPE_WINDOWINIT)
     {
-        m_uiLauncherArea = dynamic_cast<CTileLayoutUI*>(  m_pm.FindControl(L"Launcher_Area"));
+        m_searchEdit = dynamic_cast<CEditUI*>(m_pm.FindControl(L"Dialog_Title_Area_Search"));
+        m_uiLauncherArea = dynamic_cast<CTileLayoutUI*>(m_pm.FindControl(L"Launcher_Area"));
 
         if (!m_position.IsNull())
             ::MoveWindow(m_hWnd, m_position.left, m_position.top, m_position.GetWidth(), m_position.GetHeight(), TRUE);
@@ -712,15 +739,23 @@ bool FLMainToast::AnlysisFile(const TCHAR* path, LauncherInfo& info)
     {
         info.id = mxtoolkit::NewGuidString();
         info.icon = m_imgDir + info.id + _T(".bmp");
+        int i = 0;
         //获取exe的ico
-        HICON ico = ::ExtractIcon(CPaintManagerUI::GetInstance(), path, 0);
+        HICON ico = NULL;
+        while (ico = ::ExtractIcon(CPaintManagerUI::GetInstance(), path, i++))
+        {
+            CxImage ximg(CXIMAGE_FORMAT_ICO);
+            ximg.CreateFromHICON(ico, true);
+            if (ximg.IsValid())
+            {
+                int w = ximg.GetWidth();
+                int h = ximg.GetHeight();
+                ximg.Save(info.icon.c_str(), CXIMAGE_FORMAT_BMP);
+            }
 
-        CxImage ximg(CXIMAGE_FORMAT_ICO);
-        ximg.CreateFromHICON(ico, true);
-        if (ximg.IsValid())
-            ximg.Save(info.icon.c_str(), CXIMAGE_FORMAT_BMP);
+            ::DeleteObject(ico);
 
-        ::DeleteObject(ico);
+        }
     }
     else
     {
@@ -760,7 +795,7 @@ bool FLMainToast::NewLauncher(const LauncherInfo& info)
         return false;
 
     CDuiString bkImg;
-    bkImg.Format(L"file='%s' dest='20,5,80,65'", info.icon.c_str());
+    bkImg.Format(L"file='%s' dest='30,28,66,64'", info.icon.c_str());
     btn->SetBkImage(bkImg);
     btn->SetText(info.name.c_str());
     btn->SetName(info.id.c_str());

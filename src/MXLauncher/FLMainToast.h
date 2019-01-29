@@ -65,6 +65,7 @@ protected:
 
 private:
     CTileLayoutUI * m_uiLauncherArea = nullptr;
+    CEditUI*        m_searchEdit = nullptr;
 
 private:
     DWORD m_maxAphle = 255;
