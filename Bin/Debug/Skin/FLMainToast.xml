@@ -7,7 +7,7 @@
 		<HorizontalLayout name="Dialog_Title_Area_Layout" height="30">
 			<Label name="Dialog_Title_Area_Logo" width="18" height="18" padding="5,6,5,6" bkimage="img\mx.png"/>
 			<Label name="Dialog_Title_Area_Logo_Name" text="MXFastLauncher" textpadding="0,7,0,9" textcolor="#FFffffff" align="left"/>
-			<Edit name="Dialog_Title_Area_Search" padding="10,1,10,1"/>
+			<Edit name="Dialog_Title_Area_Search" padding="10,1,10,1" visible="false"/>
 			<Button name="Dialog_Title_Area_Menu" tooltip="菜单" width="30" height="30" stateimage="img\menu.png" statecount="4" visible="false"/>
 			<Button name="Dialog_Title_Area_Close" tooltip="关闭" width="30" height="30" stateimage="common\close.png" statecount="4"/>
 		</HorizontalLayout>

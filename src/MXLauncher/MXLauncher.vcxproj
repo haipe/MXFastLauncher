@@ -199,6 +199,7 @@ copy $(SolutionDir)\Bin\DuiLib.dll  .\</Command>
     <ClInclude Include="FLMainToastMVP.h" />
     <ClInclude Include="FLMainToastPresenter.h" />
     <ClInclude Include="FLMainToastModel.h" />
+    <ClInclude Include="FLTaskBarIcon.h" />
     <ClInclude Include="MXLauncher.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -245,6 +246,7 @@ copy $(SolutionDir)\Bin\DuiLib.dll  .\</Command>
     <ClCompile Include="FLMainToast.cpp" />
     <ClCompile Include="FLMainToastPresenter.cpp" />
     <ClCompile Include="FLMainToastModel.cpp" />
+    <ClCompile Include="FLTaskBarIcon.cpp" />
     <ClCompile Include="MXLauncher.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

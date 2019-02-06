@@ -25,6 +25,9 @@
     <Filter Include="_common">
       <UniqueIdentifier>{7941f566-3188-4b5d-a92b-3291da1f9d08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TaskBarIcon">
+      <UniqueIdentifier>{0c1e5c97-2eac-48e7-b12c-88eff88432f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\MXToolkit\common\MXPath.h">
       <Filter>_common</Filter>
+    </ClInclude>
+    <ClInclude Include="FLTaskBarIcon.h">
+      <Filter>TaskBarIcon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\MXToolkit\common\MXPath.cpp">
       <Filter>_common</Filter>
+    </ClCompile>
+    <ClCompile Include="FLTaskBarIcon.cpp">
+      <Filter>TaskBarIcon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

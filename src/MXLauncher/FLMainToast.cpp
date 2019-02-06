@@ -839,9 +839,11 @@ void FLMainToast::DoLauncher(const TCHAR* name)
             {
                 std::thread doLauncher([launcher]()
                 {
-                    ::ShellExecute(NULL, _T("open"), launcher.path.c_str(), launcher.param.c_str(), NULL, SW_SHOWNORMAL);
+                    ::ShellExecute(NULL, _T("open"), launcher.path.c_str(), launcher.param.c_str(), NULL, SW_SHOWNORMAL);                    
                 });
                 doLauncher.detach();
+                
+                ::ReleaseCapture();
             }
         }
     }

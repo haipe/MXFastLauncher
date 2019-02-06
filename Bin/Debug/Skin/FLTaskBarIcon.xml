@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="40,40" opacity="100" roundcorner="40,40" layered="true">
+	<VerticalLayout bkcolor="#ff000000" bkimage="img\mx.png">
+		<Button name="TaskBarButton" width="32" height="32" float="true" floatalign="center,vcenter" hotimage="img\mx_hot.png"/>
+	</VerticalLayout>
+</Window>
